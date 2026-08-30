@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="FlyRank ML Internship capstone research paper on refresh opportunity scoring with honest temporal validation." />
+  <title>Refresh Opportunity Scoring — ML Capstone</title>
+  <style>
+    :root {
+      --bg: #f6f8fb; --paper: #ffffff; --ink: #14212b; --muted: #5d6b78;
+      --line: #dfe6ec; --accent: #0b6bcb; --accent2: #0a8a72;
+      --soft: #eef5fb; --warn: #fff8e7; --good: #ecf8f4;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.65; }
+    a { color: var(--accent); }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 20px 72px; }
+    header { background: linear-gradient(135deg, #0a3158, #0b6bcb 62%, #0a8a72); color: white; padding: 54px 0 48px; }
+    header .wrap { padding-top: 0; padding-bottom: 0; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 12px; font-weight: 750; opacity: .84; }
+    h1 { font-size: clamp(34px, 6vw, 62px); line-height: 1.04; margin: 12px 0 18px; max-width: 900px; }
+    .subtitle { font-size: 20px; max-width: 860px; opacity: .94; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .pill { border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 7px 11px; font-size: 13px; background: rgba(255,255,255,.08); }
+    main { margin-top: 28px; }
+    section { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 30px; margin: 18px 0; box-shadow: 0 8px 28px rgba(28,44,62,.05); }
+    h2 { margin-top: 0; font-size: 28px; letter-spacing: -.02em; }
+    h3 { margin-top: 28px; }
+    .lead { font-size: 18px; color: #293846; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 20px 0; }
+    .card { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: #fbfcfe; }
+    .metric { font-size: 30px; font-weight: 800; letter-spacing: -.03em; }
+    .label { color: var(--muted); font-size: 13px; }
+    .callout { border-left: 4px solid var(--accent); background: var(--soft); padding: 16px 18px; border-radius: 8px; }
+    .honest { border-left-color: #d58b00; background: var(--warn); }
+    .action { border-left-color: var(--accent2); background: var(--good); }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 6px; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 9px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #f7f9fb; font-weight: 700; }
+    .scroll { overflow-x: auto; }
+    .chart { margin: 22px 0; border: 1px solid var(--line); border-radius: 12px; padding: 18px; background: #fff; }
+    .barrow { display: grid; grid-template-columns: 150px 1fr 54px; gap: 12px; align-items: center; margin: 10px 0; }
+    .track { height: 18px; background: #edf1f5; border-radius: 999px; overflow: hidden; }
+    .fill { height: 100%; background: linear-gradient(90deg, var(--accent), #4fa2ed); border-radius: 999px; }
+    .fill.alt { background: linear-gradient(90deg, var(--accent2), #57b9a8); }
+    .coef { display: grid; grid-template-columns: 210px 1fr 70px; gap: 12px; align-items: center; margin: 9px 0; }
+    .coefline { height: 12px; background: #edf1f5; border-radius: 999px; overflow: hidden; position: relative; }
+    .coefline:before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #8f9aa4; }
+    .coefbar-pos, .coefbar-neg { position: absolute; top: 1px; bottom: 1px; border-radius: 999px; }
+    .coefbar-pos { left: 50%; background: var(--accent2); }
+    .coefbar-neg { right: 50%; background: #c25252; }
+    code { background: #f2f5f7; padding: 2px 5px; border-radius: 5px; }
+    footer { color: var(--muted); text-align: center; padding: 26px 0 8px; font-size: 13px; }
+    @media (max-width: 650px) {
+      section { padding: 22px 18px; }
+      .barrow { grid-template-columns: 110px 1fr 44px; }
+      .coef { grid-template-columns: 145px 1fr 58px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">FlyRank Machine Learning Internship · Capstone</div>
+    <h1>Refresh Opportunity Scoring with Honest Temporal Validation</h1>
+    <p class="subtitle">Can decision-time search and engagement signals rank content pages likely to decline in a later period, and can a learned model improve on a transparent rule-based baseline?</p>
+    <div class="meta">
+      <span class="pill">Lane: Refresh / Content Opportunity Scoring</span>
+      <span class="pill">Model: Logistic Regression</span>
+      <span class="pill">Development: Mar → Apr 2026</span>
+      <span class="pill">Sealed test: May → Jun 2026</span>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <section id="abstract">
+    <h2>1. Abstract</h2>
+    <p class="lead">This capstone asks whether early, decision-time search and engagement signals can rank content pages that are likely to experience a meaningful decline in the following month. I build a public-safe page-level dataset from the FlyRank Internship warehouse, define decline as a greater-than-20% fall in average daily impressions, and compare a transparent CTR/visibility rule with Logistic Regression and Random Forest. On held-out clients, Logistic Regression achieved Precision@50 of 0.88 and Precision@100 of 0.76, clearly exceeding the baseline at 0.42 and 0.36. On the sealed May→June temporal test, the result was more nuanced: the baseline slightly led at Precision@50 (0.78 vs 0.76), while Logistic Regression led at Precision@100 (0.82 vs 0.71) and ROC AUC (0.6626 vs 0.5440). The final output is therefore a ranked human-review queue for refresh prioritization, framed as directional decision support rather than proof of causal refresh impact.</p>
+  </section>
+
+  <section id="introduction">
+    <h2>2. Introduction / Problem Statement</h2>
+    <p>Content and SEO teams often have more pages than they can review manually. The practical decision is not merely whether a page may need attention, but <strong>which pages should be reviewed first</strong> when editorial capacity is limited.</p>
+    <p>The research question is: <strong>Can early, decision-time search and engagement signals identify and rank content pages likely to decline in a later period, and can a learned model outperform a transparent rule-based baseline on the same held-out data?</strong></p>
+    <div class="callout action"><strong>Decision supported:</strong> prioritize content pages for human refresh review. The model does not automatically prescribe a refresh; it ranks review candidates so an editor or SEO specialist can inspect intent, SERP context, and content quality before acting.</div>
+  </section>
+
+  <section id="data">
+    <h2>3. Data</h2>
+    <p>The analysis uses the <strong>FlyRank Internship warehouse release</strong> on Hugging Face, specifically <code>fact_content_daily_performance</code>. One modeling row represents one anonymized content page identified internally by pseudonymized client and content keys.</p>
+    <p>The development design uses <strong>March 2026 as the feature window</strong> and <strong>April 2026 as the future outcome window</strong>. A separate <strong>May→June 2026</strong> period is kept sealed until after the candidate model is selected. Because source availability differs across pages and months, impressions are normalized by the number of GSC-available days, and pages must have at least seven available days in both feature and outcome months.</p>
+    <div class="grid">
+      <div class="card"><div class="metric">18,007</div><div class="label">development modeling rows after availability filters</div></div>
+      <div class="card"><div class="metric">32,789</div><div class="label">sealed May→June evaluation rows</div></div>
+      <div class="card"><div class="metric">20%</div><div class="label">future decline threshold</div></div>
+      <div class="card"><div class="metric">5</div><div class="label">decision-time model features</div></div>
+    </div>
+    <p>The target proxy is fixed before model training: a page is labeled as declining when its next-month average daily impressions are below 80% of the feature-month average daily impressions. Client names, domains, URLs, private queries, credentials, product flags, and future-window or label-derived inputs are excluded from the model features.</p>
+  </section>
+
+  <section id="methodology">
+    <h2>4. Methodology</h2>
+    <p>The task is binary classification used as a ranking problem: the classifier produces a probability of the future-decline proxy, and that probability becomes the review-priority score.</p>
+    <h3>Features</h3>
+    <ul>
+      <li>feature-month impressions</li>
+      <li>feature-month clicks</li>
+      <li>feature-month average position</li>
+      <li>feature-month sessions</li>
+      <li>feature-month engaged sessions</li>
+    </ul>
+    <p>Development evaluation uses a <strong>client-grouped train/test split</strong>. The training set contains 16,128 rows from 20 clients and the test set contains 1,879 rows from 7 different clients, with <strong>zero client overlap</strong>. This reduces leakage from client-specific patterns.</p>
+    <p>Three approaches are compared on the same held-out pages: a transparent rule baseline, Logistic Regression, and Random Forest. The rule combines search visibility with CTR underperformance relative to position buckets. Logistic Regression is selected as the final candidate after the held-out-client comparison; the feature set, decline threshold, baseline logic, model family, and metrics are then frozen before the May→June test.</p>
+    <div class="callout"><strong>Primary metric:</strong> Precision@50, because the operational question is “which pages should be reviewed first?” Precision@100 and ROC AUC are also reported so the very top of the queue and the broader ranking can both be evaluated.</div>
+  </section>
+
+  <section id="results">
+    <h2>5. Results</h2>
+    <h3>Held-out client development results</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Method</th><th>Precision@50</th><th>Precision@100</th><th>ROC AUC</th><th>Base rate</th></tr></thead>
+      <tbody>
+        <tr><td>Baseline rule</td><td>0.42</td><td>0.36</td><td>0.5232</td><td>0.3374</td></tr>
+        <tr><td><strong>Logistic Regression</strong></td><td><strong>0.88</strong></td><td><strong>0.76</strong></td><td><strong>0.6960</strong></td><td>0.3374</td></tr>
+        <tr><td>Random Forest</td><td>0.48</td><td>0.49</td><td>0.6476</td><td>0.3374</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Sealed May→June temporal results</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Method</th><th>Precision@50</th><th>Precision@100</th><th>ROC AUC</th><th>Base rate</th></tr></thead>
+      <tbody>
+        <tr><td>Baseline rule</td><td><strong>0.78</strong></td><td>0.71</td><td>0.5440</td><td>0.6755</td></tr>
+        <tr><td><strong>Logistic Regression</strong></td><td>0.76</td><td><strong>0.82</strong></td><td><strong>0.6626</strong></td><td>0.6755</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="chart">
+      <h3>Sealed ranking precision</h3>
+      <div class="barrow"><span>Baseline P@50</span><div class="track"><div class="fill" style="width:78%"></div></div><strong>0.78</strong></div>
+      <div class="barrow"><span>Logistic P@50</span><div class="track"><div class="fill alt" style="width:76%"></div></div><strong>0.76</strong></div>
+      <div class="barrow"><span>Baseline P@100</span><div class="track"><div class="fill" style="width:71%"></div></div><strong>0.71</strong></div>
+      <div class="barrow"><span>Logistic P@100</span><div class="track"><div class="fill alt" style="width:82%"></div></div><strong>0.82</strong></div>
+    </div>
+
+    <p>The sealed outcome is deliberately reported as mixed: the baseline is slightly stronger at the first 50 recommendations, while Logistic Regression is stronger across the top 100 and across the full ranking by ROC AUC. The May→June decline base rate of 0.6755 is also much higher than the held-out-client development base rate of 0.3374, demonstrating meaningful distribution shift.</p>
+
+    <h3>Feature interpretation</h3>
+    <p>The standardized Logistic Regression coefficients show that current click performance has the largest absolute association with the future-decline score. These coefficients are associations within the fitted model, not causal effects.</p>
+    <div class="chart">
+      <div class="coef"><span>clicks</span><div class="coefline"><div class="coefbar-neg" style="width:46%"></div></div><strong>-0.5966</strong></div>
+      <div class="coef"><span>engaged sessions</span><div class="coefline"><div class="coefbar-pos" style="width:10%"></div></div><strong>+0.1313</strong></div>
+      <div class="coef"><span>impressions</span><div class="coefline"><div class="coefbar-pos" style="width:9%"></div></div><strong>+0.1221</strong></div>
+      <div class="coef"><span>average position</span><div class="coefline"><div class="coefbar-pos" style="width:6%"></div></div><strong>+0.0827</strong></div>
+      <div class="coef"><span>sessions</span><div class="coefline"><div class="coefbar-pos" style="width:4%"></div></div><strong>+0.0499</strong></div>
+    </div>
+  </section>
+
+  <section id="limitations">
+    <h2>6. Limitations &amp; Honest Framing</h2>
+    <p>This analysis is observational and should be interpreted as <strong>directional decision support</strong>, not as proof that any signal causes future decline or that refreshing a page will improve performance.</p>
+    <ul>
+      <li>The warehouse is an unbalanced panel: clients have different history depth and analytics availability.</li>
+      <li>The seven-day availability filter improves comparability but changes which pages enter the modeling population.</li>
+      <li>The 20% decline threshold is a transparent operational proxy, not a universal measure of content quality.</li>
+      <li>Performance shifts across periods: the sealed test has a much higher decline base rate than the held-out-client development test.</li>
+      <li>Logistic Regression does not dominate the baseline at every cutoff; the baseline remains competitive for the very top of the queue.</li>
+    </ul>
+    <div class="callout honest"><strong>What this work cannot claim:</strong> it does not prove Google’s algorithm, infer causal refresh impact, or justify automatic content changes without human review.</div>
+  </section>
+
+  <section id="recommendations">
+    <h2>7. Ranked Recommendations</h2>
+    <p>The final action queue is ordered by frozen Logistic Regression decline probability. Every candidate receives the reason code <code>high_predicted_decline_risk</code> and the action label <code>review_for_refresh</code>. In the first 10 sealed recommendations, 7 met the future-decline proxy and 3 did not, illustrating both usefulness and error.</p>
+    <div class="scroll"><table>
+      <thead><tr><th>Rank</th><th>Model score</th><th>Baseline score</th><th>Feature-month impressions</th><th>Clicks</th><th>Avg. position</th><th>Observed future proxy</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>1.0000</td><td>0.0000</td><td>1,908</td><td>27</td><td>11.35</td><td>No decline</td></tr>
+        <tr><td>2</td><td>0.9992</td><td>0.0000</td><td>11,396</td><td>246</td><td>6.99</td><td>No decline</td></tr>
+        <tr><td>3</td><td>0.9079</td><td>0.0000</td><td>2,427</td><td>37</td><td>11.68</td><td>Decline</td></tr>
+        <tr><td>4</td><td>0.8953</td><td>5.9052</td><td>1,052</td><td>1</td><td>17.29</td><td>Decline</td></tr>
+        <tr><td>5</td><td>0.8947</td><td>11.6787</td><td>146,900</td><td>7</td><td>73.72</td><td>Decline</td></tr>
+        <tr><td>6</td><td>0.8898</td><td>0.0000</td><td>3,242</td><td>9</td><td>38.52</td><td>Decline</td></tr>
+        <tr><td>7</td><td>0.8487</td><td>0.0000</td><td>661</td><td>4</td><td>49.87</td><td>No decline</td></tr>
+        <tr><td>8</td><td>0.8479</td><td>9.9419</td><td>24,673</td><td>4</td><td>6.88</td><td>Decline</td></tr>
+        <tr><td>9</td><td>0.8409</td><td>11.6599</td><td>159,901</td><td>27</td><td>12.06</td><td>Decline</td></tr>
+        <tr><td>10</td><td>0.8382</td><td>11.8214</td><td>183,321</td><td>43</td><td>5.70</td><td>Decline</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout action"><strong>Action playbook:</strong> review the highest-ranked pages first; inspect query intent, SERP context, and whether weak click capture is explainable without a content issue; refresh or improve only where human review confirms a plausible opportunity; then monitor performance without attributing later changes causally to the model.</div>
+  </section>
+
+  <section id="reproducibility">
+    <h2>8. Reproducibility</h2>
+    <p>The complete executed capstone notebook, earlier assignment notebooks, and all code needed to regenerate the analysis live in the public repository.</p>
+    <ul>
+      <li><a href="https://github.com/OmarAyman2005/flyrank-ml-internship">Repository</a></li>
+      <li><a href="https://github.com/OmarAyman2005/flyrank-ml-internship/blob/main/work/notebooks/capstone.ipynb">Executed capstone notebook</a></li>
+      <li><a href="https://github.com/OmarAyman2005/flyrank-ml-internship/tree/main/work/notebooks">Assignment notebooks</a></li>
+    </ul>
+    <p>The experiment fixes random seed 42 for the client-grouped split and model training. Model features, decline definition, baseline logic, and evaluation metrics were frozen before opening the sealed May→June outcome period.</p>
+  </section>
+
+  <section id="acknowledgments">
+    <h2>9. Acknowledgments &amp; Data Credit</h2>
+    <p><strong>Built on the FlyRank ML Internship dataset</strong>, provided by <a href="https://flyrank.ai">FlyRank</a> for anonymized research and education use.</p>
+    <p>The analysis respects the public-output rules: no client names, domains, URLs, private queries, credentials, or raw client-identifying data are published here.</p>
+  </section>
+
+  <footer>Refresh Opportunity Scoring · FlyRank ML Internship Capstone · 2026</footer>
+</main>
+</body>
+</html>
